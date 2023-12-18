@@ -1,12 +1,5 @@
 const express = require('express')
-const path = require('path')
-const api = require('./server/routes/api')
-const app = express()
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
-
-app.use(express.static(path.join(__dirname, 'dist')))
-app.use(express.static(path.join(__dirname, 'node_modules')))
+const router = express.Router()
 
 const wonders = [
     { name: "Mount Everest", location: "Nepal", visited: false },
@@ -16,11 +9,11 @@ const wonders = [
     { name: "Colosseum", location: "Italy", visited: true }
 ]
 
-app.get('/wonders', function (req, res) {
+router.get('/wonders', function (req, res) {
     res.send(wonders)
 })
 
-app.post('/wonder', function (req, res) {
+router.post('/wonder', function (req, res) {
     console.log("Someone's trying to make a post request")
     let wonder = req.body
     wonder.visited = false
@@ -29,7 +22,7 @@ app.post('/wonder', function (req, res) {
     
 })
 
-app.put('/wonder/:name', function (req, res) {
+router.put('/wonder/:name', function (req, res) {
     console.log("About to update someone")
     let wonder = req.params.name
     wonders.find(w => w.name === wonder).visited = true
@@ -37,14 +30,14 @@ app.put('/wonder/:name', function (req, res) {
     
 })
 
-app.delete('/wonder/:name', function (req, res) {
+router.delete('/wonder/:name', function (req, res) {
     let wonder = req.params.name
     let wondersIndex = wonders.findIndex(w => w.name === wonder)
     wonders.splice(wondersIndex, 1)
     res.end()
 })
 
-const port = 1337 //because why not
-app.listen(port, function () {
-    console.log(`Server running on ${port}`)
-})
+
+
+
+module.exports = router
